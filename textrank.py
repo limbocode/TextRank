@@ -3,16 +3,15 @@
 """
 From this paper: http://acl.ldc.upenn.edu/acl2004/emnlp/pdf/Mihalcea.pdf
 
-External dependencies: nltk, numpy, networkx
+External dependencies: nltk and networkx
 
 Based on https://gist.github.com/voidfiles/1646117
 """
 
-import io
+from os import listdir
+from itertools import combinations
 import nltk
-import itertools
 import networkx as nx
-import os
 
 
 # apply syntactic filters based on POS tags
@@ -67,7 +66,7 @@ def buildGraph(nodes):
     "nodes - list of hashables that represents the nodes of the graph"
     gr = nx.Graph()  # initialize an undirected graph
     gr.add_nodes_from(nodes)
-    nodePairs = list(itertools.combinations(nodes, 2))
+    nodePairs = list(combinations(nodes, 2))
 
     # add edges to the graph (weighted by Levenshtein distance)
     for pair in nodePairs:
@@ -166,28 +165,27 @@ def extractSentences(text):
 
 def writeFiles(summary, keyphrases, fileName):
     "outputs the keyphrases and summaries to appropriate files"
-    print("Generating output to " + 'keywords/' + fileName)
-    keyphraseFile = io.open('keywords/' + fileName, 'w')
 
-    for keyphrase in keyphrases:
-        keyphraseFile.write(keyphrase + '\n')
-    keyphraseFile.close()
+    print("Generating output to " + 'keywords/' + fileName)
+    with open('keywords/' + fileName, 'w') as keyphraseFile:
+        for keyphrase in keyphrases:
+            keyphraseFile.write(keyphrase + '\n')
 
     print("Generating output to " + 'summaries/' + fileName)
-    summaryFile = io.open('summaries/' + fileName, 'w')
-    summaryFile.write(summary)
-    summaryFile.close()
+    with open('summaries/' + fileName, 'w') as summaryFile:
+        summaryFile.write(summary)
 
     print("-")
 
 
 def main():
     # retrieve each of the articles
-    articles = os.listdir("articles")
+    articles = listdir("articles")
     for article in articles:
         print('Reading articles/' + article)
-        articleFile = io.open('articles/' + article, 'r')
-        text = articleFile.read()
+        with open('articles/' + article, 'r') as articleFile:
+            text = articleFile.read()
+
         keyphrases = extractKeyphrases(text)
         summary = extractSentences(text)
         writeFiles(summary, keyphrases, article)

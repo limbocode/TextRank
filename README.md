@@ -8,8 +8,7 @@ This implementation carries out automatic keyword and sentence extraction on 10 
 
 Dependencies
 ============
-Networkx - http://networkx.github.io/download.html
-NLTK 3.0 - http://nltk.org/install.html
-Numpy - http://sourceforge.net/projects/numpy/files/
+  * Networkx - http://networkx.github.io/download.html
+  * NLTK 3.0 - http://nltk.org/install.html
 
 
