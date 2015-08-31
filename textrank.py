@@ -10,7 +10,8 @@ Based on https://gist.github.com/voidfiles/1646117
 
 from os import listdir
 from itertools import combinations
-import nltk
+from nltk import word_tokenize, pos_tag
+from nltk.data import load as data_load
 import networkx as nx
 
 
@@ -80,10 +81,10 @@ def buildGraph(nodes):
 
 def extractKeyphrases(text):
     # tokenize the text using nltk
-    wordTokens = nltk.word_tokenize(text)
+    wordTokens = word_tokenize(text)
 
     # assign POS tags to the words in the text
-    tagged = nltk.pos_tag(wordTokens)
+    tagged = pos_tag(wordTokens)
     textlist = [x[0] for x in tagged]
     tagged = filter_for_tags(tagged)
     tagged = normalize(tagged)
@@ -144,7 +145,7 @@ def extractKeyphrases(text):
 
 
 def extractSentences(text):
-    sent_detector = nltk.data.load('tokenizers/punkt/english.pickle')
+    sent_detector = data_load('tokenizers/punkt/english.pickle')
     sentenceTokens = sent_detector.tokenize(text.strip())
     graph = buildGraph(sentenceTokens)
     calculated_page_rank = nx.pagerank(graph, weight='weight')
